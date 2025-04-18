@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Stock Dashboard</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload CSV</button>
+    </form>
+    {% if summary %}
+        <h2>Summary</h2>
+        <ul>
+            {% for key, val in summary.items() %}
+                <li><strong>{{ key }}:</strong> {{ val }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% for chart in charts %}
+        {{ chart|safe }}
+    {% endfor %}
+</body>
+</html>
