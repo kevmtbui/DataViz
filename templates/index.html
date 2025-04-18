@@ -3,23 +3,128 @@
 <head>
     <title>Stock Dashboard</title>
     <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .saved-graph-preview {
+            background-color: #2a2a2a;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .saved-graph-content {
+            display: none;
+            margin-top: 10px;
+            text-align: center;
+        }
+        .chart-controls {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .chart-controls button {
+            padding: 8px 14px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+        }
+        .download-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+        .close-btn {
+            background-color: #e53935;
+            color: white;
+        }
+    </style>
+    <script>
+        function toggleGraph(id) {
+            const content = document.getElementById(id);
+            content.style.display = (content.style.display === "none" || content.style.display === "") ? "block" : "none";
+        }
+
+        function closeGraph(button) {
+            const form = button.closest("form");
+            if (form) form.remove();
+        }
+
+        function downloadGraph(index) {
+            const svgEl = document.querySelectorAll(".plot-container")[index].querySelector("svg");
+            const serializer = new XMLSerializer();
+            const svgData = serializer.serializeToString(svgEl);
+            const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "chart_" + index + ".svg";
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
 </head>
 <body>
-    <h1>Stock Dashboard</h1>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" required>
-        <button type="submit">Upload CSV</button>
-    </form>
-    {% if summary %}
-        <h2>Summary</h2>
-        <ul>
-            {% for key, val in summary.items() %}
-                <li><strong>{{ key }}:</strong> {{ val }}</li>
+    <div class="container">
+        <h1>📊 Stock Dashboard</h1>
+
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" required><br>
+
+            <fieldset>
+                <legend>Indicators</legend>
+                <label><input type="checkbox" name="indicators" value="MA20"> MA20</label>
+                <label><input type="checkbox" name="indicators" value="MA50"> MA50</label>
+                <label><input type="checkbox" name="indicators" value="RSI"> RSI</label>
+                <label><input type="checkbox" name="indicators" value="Bollinger"> Bollinger Bands</label>
+                <label><input type="checkbox" name="indicators" value="MACD"> MACD</label>
+            </fieldset>
+
+            <label style="margin-top: 20px;">
+                <input type="checkbox" name="trim"> Trim Initial NaN Days (Recommended)
+            </label><br>
+
+            <button type="submit">Upload and Generate Dashboard</button>
+        </form>
+
+        {% if summary %}
+        <div class="graph-section">
+            <h2>📈 Summary</h2>
+            <ul>
+                {% for key, val in summary.items() %}
+                    <li><strong>{{ key }}:</strong> {{ val }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% for chart in charts %}
+        <form method="post" class="graph-section">
+            <h3>{{ chart.label }}</h3>
+            {{ chart.html|safe }}
+            <input type="hidden" name="save_chart" value="{{ loop.index }}">
+            <div class="chart-controls">
+                <button type="submit" class="save-btn">💾 Save This Graph</button>
+                <button type="button" class="close-btn" onclick="closeGraph(this)">✖ Close</button>
+                <button type="button" class="download-btn" onclick="downloadGraph({{ loop.index0 }})">⬇ Download</button>
+            </div>
+        </form>
+        {% endfor %}
+
+        {% if saved_charts %}
+        <div class="saved-graphs">
+            <h2>🗂 Saved Graphs</h2>
+            {% for saved in saved_charts %}
+            <div class="saved-graph-preview" onclick="toggleGraph('saved{{ loop.index }}')">
+                <strong>{{ saved.label }}</strong>
+                <div id="saved{{ loop.index }}" class="saved-graph-content">
+                    {{ saved.html|safe }}
+                </div>
+            </div>
             {% endfor %}
-        </ul>
-    {% endif %}
-    {% for chart in charts %}
-        {{ chart|safe }}
-    {% endfor %}
+        </div>
+        {% endif %}
+    </div>
 </body>
 </html>

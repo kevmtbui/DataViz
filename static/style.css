@@ -1,11 +1,145 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 40px;
-    background-color: #f4f4f4;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-h1 {
-    color: #333;
+
+.container {
+    max-width: 900px;
+    width: 100%;
+    padding: 30px 20px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
+h1, h2, h3, legend {
+    color: #f0f0f0;
+    text-align: center;
+}
+
 form {
-    margin-bottom: 20px;
+    background-color: #1e1e1e;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #000;
+    margin-bottom: 40px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+form fieldset {
+    border: 1px solid #444;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+label {
+    margin-right: 15px;
+    display: inline-block;
+}
+
+input[type="file"], button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+input[type="file"] {
+    background-color: #2e2e2e;
+    color: #ccc;
+}
+
+button {
+    background-color: #2196F3;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #0b7dda;
+}
+
+button.save-btn {
+    background-color: #4caf50;
+}
+
+button.save-btn:hover {
+    background-color: #388e3c;
+}
+
+button.download-btn {
+    background-color: #2196F3;
+}
+
+button.close-btn {
+    background-color: #e53935;
+}
+
+button.download-btn:hover {
+    background-color: #1976d2;
+}
+
+button.close-btn:hover {
+    background-color: #c62828;
+}
+
+.chart-controls {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.graph-section,
+.saved-graphs {
+    width: 100%;
+    margin-bottom: 40px;
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.plot-container {
+    margin: 0 auto !important;
+    display: block !important;
+}
+
+.saved-graph-preview {
+    background-color: #2a2a2a;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.saved-graph-content {
+    display: none;
+    margin-top: 10px;
+    text-align: center;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+li {
+    padding: 6px 0;
 }
