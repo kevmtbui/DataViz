@@ -38,6 +38,10 @@
             background-color: #e53935;
             color: white;
         }
+        .delete-btn {
+            background-color: #ff6f00;
+            color: white;
+        }
     </style>
     <script>
         function toggleGraph(id) {
@@ -62,6 +66,20 @@
             a.download = "chart_" + index + ".svg";
             a.click();
             URL.revokeObjectURL(url);
+        }
+
+        function deleteSaved(index) {
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.style.display = "none";
+
+            const input = document.createElement("input");
+            input.name = "delete_saved";
+            input.value = index;
+            form.appendChild(input);
+
+            document.body.appendChild(form);
+            form.submit();
         }
     </script>
 </head>
@@ -114,12 +132,16 @@
 
         {% if saved_charts %}
         <div class="saved-graphs">
-            <h2>🗂 Saved Graphs</h2>
+            <h2>🗂 Saved Graphs (Click to expand)</h2>
             {% for saved in saved_charts %}
             <div class="saved-graph-preview" onclick="toggleGraph('saved{{ loop.index }}')">
                 <strong>{{ saved.label }}</strong>
                 <div id="saved{{ loop.index }}" class="saved-graph-content">
                     {{ saved.html|safe }}
+                    <div class="chart-controls">
+                        <button type="button" class="download-btn" onclick="downloadGraph({{ loop.index0 + charts|length }})">⬇ Download</button>
+                        <button type="button" class="delete-btn" onclick="deleteSaved({{ loop.index0 }})">🗑 Delete</button>
+                    </div>
                 </div>
             </div>
             {% endfor %}
